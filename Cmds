@@ -1,0 +1,263 @@
+Initialize / Clone
+
+# Initialize new repo
+git init
+git init my-project                              # create new folder
+
+# Clone repo
+git clone https://github.com/user/repo.git
+git clone https://github.com/user/repo.git mydir # clone to specific folder
+git clone --depth 1 https://github.com/user/repo.git  # shallow clone
+git clone -b develop https://github.com/user/repo.git # clone specific branch
+
+Basic Workflow
+
+# Check status
+git status
+git status -s                                    # short format
+
+# Add files
+git add file.txt                                 # specific file
+git add .                                        # all files
+git add *.py                                     # all python files
+git add src/                                     # specific folder
+
+# Commit
+git commit -m "your message"
+git commit -am "message"                         # add + commit tracked files
+git commit --amend -m "new message"              # fix last commit message
+git commit --amend --no-edit                     # add to last commit
+
+# View history
+git log
+git log --oneline                                # one line per commit
+git log --oneline --graph                        # with branch graph
+git log --oneline --graph --all                  # all branches
+git log -5                                       # last 5 commits
+git log --author="John"                          # by author
+git log --since="2 weeks ago"                    # by date
+git log file.txt                                 # commits for specific file
+
+Branching
+
+# List branches
+git branch                                       # local branches
+git branch -r                                    # remote branches
+git branch -a                                    # all branches
+
+# Create branch
+git branch feature/login
+git checkout -b feature/login                    # create and switch
+git switch -c feature/login                      # modern way
+
+# Switch branch
+git checkout main
+git switch main                                  # modern way
+
+# Rename branch
+git branch -m old-name new-name
+git branch -m new-name                           # rename current branch
+
+# Delete branch
+git branch -d feature/login                      # safe delete
+git branch -D feature/login                      # force delete
+
+# Delete remote branch
+git push origin --delete feature/login
+
+# Push branch to remote
+git push origin feature/login
+git push -u origin feature/login                 # set upstream
+
+Merging
+
+# Merge branch into current
+git merge feature/login
+git merge --no-ff feature/login                  # always create merge commit
+git merge --squash feature/login                 # squash all commits into one
+
+# Abort merge
+git merge --abort
+
+# View merged branches
+git branch --merged
+git branch --no-merged
+
+Rebasing
+
+# Rebase current branch onto main
+git rebase main
+git rebase -i HEAD~3                             # interactive rebase last 3 commits
+git rebase -i HEAD~5                             # squash/edit last 5 commits
+
+# Abort rebase
+git rebase --abort
+
+# Continue rebase after fixing conflict
+git rebase --continue
+
+# Skip commit during rebase
+git rebase --skip
+
+Remote
+
+# View remotes
+git remote -v
+
+# Add remote
+git remote add origin https://github.com/user/repo.git
+
+# Remove remote
+git remote remove origin
+
+# Rename remote
+git remote rename origin upstream
+
+# Change remote URL
+git remote set-url origin https://github.com/user/new-repo.git
+
+# Fetch from remote
+git fetch origin
+git fetch --all                                  # fetch all remotes
+
+# Pull
+git pull
+git pull origin main
+git pull --rebase origin main                    # rebase instead of merge
+
+# Push
+git push
+git push origin main
+git push -u origin main                          # set upstream
+git push --force origin main                     # force push ⚠️
+git push --force-with-lease origin main          # safer force push
+git push --tags                                  # push all tags
+
+Stashing
+
+# Save work in progress
+git stash
+git stash save "work in progress login"          # with message
+
+# List stashes
+git stash list
+
+# Apply stash
+git stash apply                                  # apply latest keep stash
+git stash pop                                    # apply latest remove stash
+git stash apply stash@{2}                        # apply specific stash
+
+# Drop stash
+git stash drop                                   # drop latest
+git stash drop stash@{2}                         # drop specific
+git stash clear                                  # drop all stashes
+
+# Stash including untracked files
+git stash -u
+
+Diff
+
+# View changes
+git diff                                         # unstaged changes
+git diff --staged                                # staged changes
+git diff HEAD                                    # all changes vs last commit
+git diff main feature/login                      # between branches
+git diff commit1 commit2                         # between commits
+git diff HEAD~1 HEAD                             # last 2 commits
+
+# View specific file diff
+git diff file.txt
+git diff main..feature/login -- file.txt
+
+Reset / Revert
+
+# Unstage files
+git reset HEAD file.txt
+git restore --staged file.txt                    # modern way
+
+# Discard changes in working directory
+git checkout -- file.txt
+git restore file.txt                             # modern way
+
+# Reset commits
+git reset --soft HEAD~1                          # undo commit keep changes staged
+git reset --mixed HEAD~1                         # undo commit keep changes unstaged
+git reset --hard HEAD~1                          # undo commit discard changes ⚠️
+git reset --hard origin/main                     # reset to remote state
+
+# Revert commit (safe — creates new commit)
+git revert commit_hash
+git revert HEAD                                  # revert last commit
+git revert HEAD~3..HEAD                          # revert last 3 commits
+
+Tags
+
+# Create tag
+git tag v1.0
+git tag -a v1.0 -m "Release version 1.0"        # annotated tag
+git tag -a v1.0 commit_hash                      # tag specific commit
+
+# List tags
+git tag
+git tag -l "v1.*"                                # filter tags
+
+# Push tags
+git push origin v1.0                             # push specific tag
+git push origin --tags                           # push all tags
+
+# Delete tag
+git tag -d v1.0                                  # local
+git push origin --delete v1.0                    # remote
+
+# Checkout tag
+git checkout v1.0
+-------
+.gitignore
+
+# Create gitignore
+touch .gitignore
+
+# Common entries
+node_modules/
+.env
+*.log
+dist/
+build/
+.DS_Store
+__pycache__/
+*.pyc
+.terraform/
+*.tfstate
+
+# Remove already tracked file
+git rm --cached file.txt
+git rm --cached -r node_modules/                 # folder
+
+# Check if file is ignored
+git check-ignore -v file.txt
+---------
+Git Flow (Real World)
+
+# Feature development
+git checkout main
+git pull origin main
+git checkout -b feature/login
+  # make changes
+git add .
+git commit -m "add login feature"
+git push origin feature/login
+  # create PR on GitHub
+  # get review
+  # merge PR
+git checkout main
+git pull origin main
+git branch -d feature/login
+
+# Hotfix
+git checkout main
+git checkout -b hotfix/critical-bug
+  # fix bug
+git commit -m "fix critical bug"
+git push origin hotfix/critical-bug
+  # create PR → merge to main
+  # also merge to develop
