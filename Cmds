@@ -254,7 +254,7 @@ git pull origin main
 git branch -d feature/login
 
 # Hotfix
-git checkout main
+git checkout main                      // simply means switch to the main branch.
 git checkout -b hotfix/critical-bug
   # fix bug
 git commit -m "fix critical bug"
