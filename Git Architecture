@@ -127,7 +127,7 @@ git merge  origin/main
     └── merge command
 --------------------------------------------------
 main           → your local branch
-origin/main    → your local copy of the remote branch (updated when you fetch)
+origin/main    → your local copy of the remote branch (when you git fetch you cannot directly edit this)
 -----------------------------------------------------
 Correct steps for remote to working dir?
 
