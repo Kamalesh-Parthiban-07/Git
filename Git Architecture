@@ -1,0 +1,143 @@
+4 Main Areas
+
+Remote Repository          GitHub/GitLab/Bitbucket
+      │                    (team shares code here)
+      │
+      │ clone/fetch/pull
+      ▼
+Local Repository           .git folder
+      │                    (full history stored here)
+      │
+      │ checkout
+      ▼
+Staging Area               .git/index file
+      │                    (files ready to commit)
+      │
+      │ add
+      ▼
+Working Directory          your actual files
+                           (what you see and edit)
+
+
+---------------------------------------------------------
+
+Full Day Example
+
+# 1. Get repo from remote → working directory
+git clone https://github.com/myorg/myrepo.git
+
+# 2. Edit files in working directory
+vim login.py
+
+# 3. Move to staging area
+git add login.py
+
+# 4. Check what's staged
+git status
+# Changes to be committed:
+#   modified: login.py       ← in staging ✅
+
+# 5. Commit to local repo
+git commit -m "fixed login bug"
+# [main f4g5h6i] fixed login bug  ← in local repo ✅
+
+# 6. Push to remote repo
+git push origin main
+# → github now has your commit ✅
+
+# 7. Teammate pushes new code, you fetch
+git fetch origin
+# → downloads to local repo, not working dir
+
+# 8. Merge into working directory
+git merge origin/main
+# → working dir updated ✅
+-------------------------------------------------
+Working Dir → Staging      git add filename
+Staging     → Local Repo   git commit -m "message"
+Local Repo  → Remote       git push origin main
+Remote      → Local Repo   git fetch origin
+Local Repo  → Working Dir  git checkout branch   ← switch
+Local Repo  → Working Dir  git merge             ← combine
+Remote      → Working Dir  git pull              ← fetch + merge
+------------------------------------------------------------
+someone updated in remote repo so first git fetch then get merge right?
+
+With git pull — conflict hits immediately without warning ⚠️
+With git fetch + git merge — you see it coming and fix it first ✅
+--------------
+When You Clone a Repo
+--------------------
+git clone https://github.com/myorg/ecommerce.git
+
+# Git automatically creates a nickname called "origin"
+# origin = https://github.com/myorg/ecommerce.git
+
+-------------------
+Proof — Check What Origin Points To
+-------------
+
+git remote -v
+
+# Output:
+# origin  https://github.com/myorg/ecommerce.git (fetch)
+# origin  https://github.com/myorg/ecommerce.git (push)
+----------------------------------------
+# Without nickname — type full URL every time 😫
+git fetch https://github.com/myorg/ecommerce.git
+
+# With origin nickname — short and clean ✅
+git fetch origin
+--------------------------------------
+git merge main         # merge your local main into current branch
+git merge origin/main  # merge remote's main into current branch ✅
+---------------------------------------------------------------------
+git merge  origin/main
+    │         │    │
+    │         │    └── branch name (main)
+    │         └── remote nickname (origin = GitHub)
+    └── merge command
+--------------------------------------------------
+main           → your local branch
+origin/main    → your local copy of the remote branch (updated when you fetch)
+-----------------------------------------------------
+Correct steps for remote to working dir?
+
+https://www.youtube.com/watch?v=KmagW60Li-o
+
+git fetch origin                 // git fetch 
+git diff main origin/main
+git merge origin/main           // git merge
+
+-----------------------
+git fetch origin
+-----------------------
+# See exactly which files changed
+git diff main origin/main --name-only
+
+# Output:
+# payment.py    ← new file
+# auth.py       ← new file
+------------------------
+# See exact code changes
+git diff main origin/main
+--------------------
+# Output:
+# +++ b/payment.py
+# + def process_payment(amount):
+# +     stripe.charge(amount)
+# +     return "success"
+#
+# +++ b/auth.py
+# + def authenticate(user, password):
+# +     return check_credentials(user, password)
+--------------
+git merge origin/main
+-------------
+# Output:
+# Updating b1c2d3e..f4g5h6i
+# Fast-forward
+#  payment.py | 4 ++++
+#  auth.py    | 3 +++
+# 2 files changed, 7 insertions(+)
+---------------------------------------------
