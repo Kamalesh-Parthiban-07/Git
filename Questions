@@ -333,6 +333,27 @@ You now have xyz789
 → Git thinks they are different commits ❌
 → causes conflicts for everyone ⚠️
 ------------------------------------------------------------------------------
+Without Rebase (direct merge, branches diverged)
+
+git log --oneline
+
+# M  Merge branch feature into main  ← extra commit ⚠️
+# E  added checkout page
+# D  added cart page
+# C  payment page
+# B  login page
+# A  first commit
+
+With Rebase First Then Merge (fast forward)
+
+git log --oneline
+
+# E  added checkout page   ← clean ✅
+# D  added cart page       ← clean ✅
+# C  payment page
+# B  login page
+# A  first commit
+-----------------------------------------------
 
 
 
