@@ -357,7 +357,7 @@ git log --oneline
 What is the difference between *git merge* and *git rebase*?
 
 merge  = joins two branches together (creates extra commit)
-rebase = moves your commits on top of another branch (clean history)
+rebase = rewrites commits onto another branch to create a cleaner, linear history without merge commits.
 
 merge = copies D and E into main
         nothing moved
