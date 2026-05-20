@@ -24,4 +24,320 @@ git restore --staged login.py
 git diff --staged
 -------------------------------------------------
 What is the difference between *git merge* and *git rebase*?
+--------
+The Story
+-------
+You and your teammate work on same project
+
+main branch = production code
+
+You created feature branch to add cart page
+-----------------------------------------------
+Current Situation
+
+main:    A → B → C
+                 ↑
+            teammate added
+            payment page
+
+feature: A → B → D → E
+                 ↑   ↑
+            cart    checkout
+            page    page
+            (you)   (you)
+
+You Finished Feature
+
+Your manager says
+"merge your feature into main"
+= put your cart and checkout into production
+
+Step 1 — Go TO Main
+
+git checkout main
+
+Step 2 — Bring Feature INTO Main
+
+git merge feature
+
+What Happens
+
+BEFORE:
+main:    A → B → C
+feature: A → B → D → E
+
+AFTER:
+main:    A → B → C → D → E
+                           ↑
+                    main now has
+                    cart + checkout
+                    ready for production ✅
+--------------------------------------------------
+After git merge feature INTO main
+
+feature: A → B → D → E        ← feature unchanged
+main:    A → B → C → D → E    ← main got D and E added ✅
+
+Now You Can Delete Feature Branch
+
+# Feature merged into main, no longer needed
+git branch -d feature
+
+# Only main remains with full code ✅
+main: A → B → C → D → E
+
+Real World
+
+feature branch → temporary (deleted after merge)
+main branch    → permanent (always has latest code) ✅
+------------------------------------------------------
+What git rebase Does
+
+git checkout feature
+git rebase main
+
+Step 1 — Feature Branch Looks at Main
+
+main:    A → B → C
+feature: A → B → D → E
+
+feature says "main has C, I don't have C"
+"let me put C before my D and E"
+
+Step 2 — Temporarily Removes D and E
+
+main:    A → B → C
+feature: A → B          ← D and E lifted off temporarily
+
+Step 3 — Takes C from Main
+
+main:    A → B → C
+feature: A → B → C      ← C added to feature
+
+Step 4 — Puts D and E Back After C
+
+main:    A → B → C
+feature: A → B → C → D → E  ← D and E placed after C ✅
+
+Real World When to Use
+
+rebase = "main has new changes, I want them in my feature branch"
+         before I finish my feature
+
+merge  = "I finished feature, put it into main"
+         feature is done, going to production
+--------------------------------------------------------------
+main:    A → B → C
+feature: A → B → D → E
+                 
+feature is missing C ⚠️
+---------------------
+Rebase vs Merge for This Case
+---------------------
+goal = get C into feature branch
+
+git rebase main  ✅  clean, linear history
+                     A→B→C→D→E
+
+git merge main   ⚠️  works but creates extra merge commit
+                     A→B→D→E→M
+                     looks messy in feature branch
+
+in this case what merge does?
+
+What Happens
+
+BEFORE:
+main:    A → B → C
+feature: A → B → D → E
+
+AFTER:
+main:    A → B → C            ← unchanged
+feature: A → B → D → E → M   ← M created
+                          ↑
+                     merge commit
+                     M contains C inside it
+------------------------------------------
+Rebase vs Merge for Same Goal
+
+REBASE                         MERGE
+feature: A→B→C→D→E             feature: A→B→D→E→M
+              ↑                                  ↑
+         C clearly visible          C hidden inside M
+         clean history ✅           messy history ⚠️
+---------------------------------------------------------
+Situation
+
+main:    A → B → C
+feature: A → B → C → D → E
+
+you want D and E in main ✅
+feature is DONE
+
+-------
+Answer — Use git merge
+
+git checkout main
+git merge feature
+
+BEFORE:
+main:    A → B → C
+feature: A → B → C → D → E
+
+AFTER:
+main:    A → B → C → D → E ✅
+-------------
+Simple Rule
+
+feature missing main commits?  → rebase ✅ (during development)
+main missing feature commits?  → merge  ✅ (feature is done)
+---------------------------------------------------------------------------------
+In Merge When M is Created vs Not
+
+M created (not fast forward):
+main:    A → B → C
+feature: A → B → D → E
+              ↑
+         feature missing C
+         both branches diverged
+         → M needed to combine ⚠️
+
+No M (fast forward):
+main:    A → B → C
+feature: A → B → C → D → E
+              ↑
+         feature has everything main has
+         just moves forward
+         → no M needed ✅
+-----------------------------------------
+What Rebase Does in This Case
+
+Situation
+
+main:    A → B → C
+feature: A → B → C → D → E
+
+goal = get D and E into main
+------------
+If You Do Rebase
+
+git checkout main
+git rebase feature
+
+BEFORE:
+main:    A → B → C
+feature: A → B → C → D → E
+
+AFTER:
+main:    A → B → C → D → E ✅
+feature: A → B → C → D → E ✅
+--------------------------
+Same Result as Merge!
+
+merge result:  main = A → B → C → D → E ✅
+rebase result: main = A → B → C → D → E ✅
+---------------------------------
+But Rebase on Main is WRONG ⚠️
+
+NEVER rebase on main in real world
+
+main is public branch
+everyone is using main
+rebase rewrites history
+teammates will have conflicts ❌
+
+----------------------------------------------
+What is the difference between *git merge* and *git rebase*?
+
+merge  = joins two branches together (creates extra commit)
+rebase = moves your commits on top of another branch (clean history)
+
+"On Top" Means
+
+BEFORE rebase:
+B is base of D and E
+D and E sit on top of B
+
+A → B → D → E
+         ↑
+      base of D
+
+AFTER rebase:
+C becomes new base of D and E
+D and E sit on top of C
+
+A → B → C → D → E
+              ↑
+         new base of D ✅
+-------------------------------
+Simple One Liner
+-----------------------------
+"on top" = your commits D and E
+           now start from C
+           instead of B ✅
+
+Base of D changed from B to C — that's why it's called re-base! 🙂
+-------------------------------------------------------
+Simple Rule
+
+rebase rewrites history  → never do on main ❌
+merge keeps history      → safe on main ✅
+
+Same code, new identity — that's what rebase does! 🙂
+-----------------------------------------------------
+What Gets Rewritten
+
+BEFORE rebase:
+D = commit hash abc123  (based on B)
+E = commit hash def456  (based on D)
+
+AFTER rebase:
+D'= commit hash xyz789  (based on C) ← new hash!
+E'= commit hash pqr012  (based on D')← new hash!
+
+Same code — but different commit hash ✅
+-----------------------
+Why Hash Changes
+
+Git commit hash is based on:
+├── code changes
+├── author
+├── timestamp
+└── PARENT COMMIT  ← this changes!
+
+D was based on B → hash = abc123
+D now based on C → hash = xyz789  ← parent changed so hash changes
+
+Merge Doesn't Rewrite
+
+MERGE:
+D = abc123  ← same hash, never changes ✅
+E = def456  ← same hash, never changes ✅
+M = new merge commit created
+
+REBASE:
+D'= xyz789  ← new hash ⚠️
+E'= pqr012  ← new hash ⚠️
+no merge commit
+-------------------------------------
+Why Rewriting is Dangerous on Main
+
+You have D  = abc123
+Teammate has D = abc123  ← same
+
+You rebase main
+Now D'= xyz789  ← different!
+
+Teammate still has abc123
+You now have xyz789
+→ Git thinks they are different commits ❌
+→ causes conflicts for everyone ⚠️
+------------------------------------------------------------------------------
+
+
+
+
+
+
+
 
