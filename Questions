@@ -369,6 +369,43 @@ rebase = rewrites D and E as D' and E' (new hash)
          feature still has D' and E' ✅
          same code, new hash ✅
 
+Starting Point
+
+A---B---C   main
+     \
+      D---E   feature
+
+git merge
+
+git checkout main
+git merge feature
+
+Result
+
+A---B---C---M   main
+     \     /
+      D---E
+
+M created ⚠️ because main has C feature missing C branches diverged so M needed to join them
+
+the merge commit M contains the combined result of both branches, including changes from D and E.
+
+But D and E still remain as separate commits in history. M does not “replace” them; it just connects the two branch histories together.
+------------------------
+
+rebase takes commits like D and E and replays them on top of C, creating a straight history.
+
+Before:
+
+A---B---C main
+     \
+      D---E feature
+
+After git rebase main:
+
+A---B---C---D'---E'
+
+D' and E' are rewritten versions of D and E, and no merge commit is created.
 
 
 
