@@ -1,0 +1,27 @@
+What is meant by "*staging*" in Git?
+
+# Add file to staging
+git add login.py
+
+# Add all files to staging
+git add .
+
+# Check what's staged and what's not
+git status
+
+# Output:
+# Changes to be committed:        ← STAGED ✅
+#   modified: login.py
+#   modified: payment.py
+#
+# Changes not staged for commit:  ← NOT STAGED
+#   modified: README.md
+
+# Remove file from staging (unstage)
+git restore --staged login.py
+
+# See what's staged (exact code)
+git diff --staged
+-------------------------------------------------
+What is the difference between *git merge* and *git rebase*?
+
