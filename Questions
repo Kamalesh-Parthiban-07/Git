@@ -354,7 +354,20 @@ git log --oneline
 # B  login page
 # A  first commit
 -----------------------------------------------
+What is the difference between *git merge* and *git rebase*?
 
+merge  = joins two branches together (creates extra commit)
+rebase = moves your commits on top of another branch (clean history)
+
+merge = copies D and E into main
+        nothing moved
+        nothing rewritten
+        both branches keep their commits ✅
+
+rebase = rewrites D and E as D' and E' (new hash)
+         places them after C
+         feature still has D' and E' ✅
+         same code, new hash ✅
 
 
 
