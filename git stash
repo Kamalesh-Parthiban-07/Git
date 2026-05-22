@@ -1,0 +1,43 @@
+git stash is a temporary save for unfinished work when you're not ready to commit.
+
+Yes, exactly! That's the right way to think about it:
+
++------------------+--------------------------------+----------------------------------+
+|                  | git add + git commit           | git stash                       |
++------------------+--------------------------------+----------------------------------+
+| Purpose          | Permanently save to history    | Temporarily save aside          |
++------------------+--------------------------------+----------------------------------+
+| When             | Work is done / ready           | Work is incomplete / not ready  |
++------------------+--------------------------------+----------------------------------+
+| Visible in log   | Yes                            | No                              |
++------------------+--------------------------------+----------------------------------+
+
+Flow:
+
+Working on feature (incomplete)
+        ↓
+Need to switch branch urgently
+        ↓
+Can't commit (code is half-done)
+Can't switch (git will warn you)
+        ↓
+git stash ← saves your incomplete work temporarily
+        ↓
+Switch branch, do your work
+        ↓
+Come back
+        ↓
+git stash pop ← brings your incomplete work back
+        ↓
+Continue where you left off ✅
+
+--------------------------------------
+pop vs apply:
+
+git stash pop → restores and removes from stash list
+git stash apply → restores but keeps it in stash list
+--------------------------------------------------------
+# See all stashes
+git stash list
+# stash@{0}: On feature: half-done login feature
+# stash@{1}: WIP on main: old stuff
