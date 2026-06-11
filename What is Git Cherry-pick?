@@ -1,0 +1,57 @@
+What is Git Cherry-pick?
+
+Git cherry-pick applies a specific commit from one branch to another without merging the entire branch. 
+It's commonly used to apply hotfixes to production branches without bringing in unfinished feature code.
+
+Git Cherry-pick = Apply a specific commit from one branch to another branch.
+
+Simple analogy:
+
+Pick only the fruit you want from a tree — not the entire branch.
+
+main branch:
+A → B → C → D → E
+
+feature branch:
+A → B → F → G
+
+You want only commit G in main:
+        ↓
+git cherry-pick G
+        ↓
+main branch becomes:
+A → B → C → D → E → G
+
+Commands:
+
+# Cherry-pick single commit
+git cherry-pick <commit-hash>
+
+# Cherry-pick multiple commits
+git cherry-pick abc123 def456
+
+# Cherry-pick a range
+git cherry-pick abc123..def456
+
+# Cherry-pick without committing (staging only)
+git cherry-pick --no-commit <commit-hash>
+
+Real use case (your context):
+
+hotfix/payment-bug branch
+→ fixed critical bug → commit abc123
+→ but full branch not ready to merge
+
+main branch needs that fix NOW:
+        ↓
+git cherry-pick abc123
+        ↓
+Only that fix goes to main ✅
+Rest of hotfix branch stays separate ✅
+
+| Aspect            | Cherry-pick           | Merge              |
+| ----------------- | --------------------- | ------------------ |
+| **What it takes** | Specific commits only | Entire branch      |
+| **Use case**      | Hotfix, selective fix | Full feature merge |
+| **History**       | Clean                 | Full history       |
+
