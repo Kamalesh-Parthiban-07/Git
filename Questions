@@ -50,6 +50,11 @@ main:    A---B---C
               \
 feature:       D---E
 
+C is neither copied nor moved. It is the same commit that both branches now share in their history.
+
+✅ C becomes part of the feature branch's history.
+✅ D and E are rewritten as new commits (D' and E'), so they get new commit
+
 Switch to the feature branch:
 
 git checkout feature
