@@ -41,3 +41,12 @@ git stash apply → restores but keeps it in stash list
 git stash list
 # stash@{0}: On feature: half-done login feature
 # stash@{1}: WIP on main: old stuff
+----------------------
+
+git stash → Save current changes.
+git stash list → Show saved stashes.
+git stash apply → Restore changes (keep stash).
+git stash pop → Restore changes and remove stash.
+git stash drop → Delete one stash.
+git stash clear → Delete all stashes.
+git stash -u → Include untracked files.
