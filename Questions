@@ -29,6 +29,53 @@ git restore --staged login.py
 git diff --staged
 -------------------------------------------------
 What is the difference between *git merge* and *git rebase*?
+
+
+| **Git Merge**                                         | **Git Rebase**                                                                      |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Combines two branches by creating a **merge commit**. | Reapplies commits from one branch on top of another, creating a **linear history**. |
+| Preserves the complete branch history.                | Rewrites commit history.                                                            |
+| Safe for shared/public branches.                      | Best for local or private branches before sharing.                                  |
+| Results in a non-linear history with merge commits.   | Results in a clean, straight commit history.                                        |
+|  Main branch                                          | Feature branch
+
+You generally do not rebase main, especially if it's a shared branch, because rebasing rewrites commit history. 
+Rewriting the history of a shared branch can cause problems for other developers who have already based work on it.
+
+Recommended workflow
+
+Suppose:
+
+main:    A---B---C
+              \
+feature:       D---E
+
+Switch to the feature branch:
+
+git checkout feature
+
+Rebase it onto the latest main:
+
+git rebase main
+
+Now the history becomes:
+
+main:    A---B---C
+                  \
+feature:           D'---E'
+
+Then switch to main and merge:
+
+git checkout main
+git merge feature
+
+Since main hasn't diverged, this is often a fast-forward merge, resulting in:
+
+A---B---C---D'---E'
+
+Why not rebase main?
+
+You generally do not rebase main, especially if it's a shared branch, because rebasing rewrites commit history. Rewriting the history of a shared branch can cause problems for other developers who have already based work on it.
 --------
 The Story
 -------
