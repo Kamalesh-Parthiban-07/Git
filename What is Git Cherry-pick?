@@ -57,6 +57,8 @@ Rest of hotfix branch stays separate ✅
 
 git cherry-pick is run from the branch where you want the commit to be applied
 
+If the commit is in the feature branch and you want it in the main branch, follow these steps:
+
 git checkout main
 
 Make sure main is up to date (optional but recommended):
