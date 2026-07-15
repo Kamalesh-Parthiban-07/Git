@@ -55,3 +55,19 @@ Rest of hotfix branch stays separate ✅
 | **Use case**      | Hotfix, selective fix | Full feature merge |
 | **History**       | Clean                 | Full history       |
 
+git cherry-pick is run from the branch where you want the commit to be applied
+
+git checkout main
+
+Make sure main is up to date (optional but recommended):
+
+git pull origin main
+
+Cherry-pick the commit:
+
+git cherry-pick <commit-hash>
+
+Push the updated main branch:
+
+git push origin main
+
